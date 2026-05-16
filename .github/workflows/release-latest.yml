@@ -16,6 +16,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Resolve release title
+        id: relname
+        run: |
+          if [ "${{ github.ref_name }}" = "Stable" ]; then
+            latest_v=$(git describe --tags --abbrev=0 --exclude=Stable HEAD)
+            echo "name=$latest_v" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Build zip package
         run: zip -j Typora_Claude-Like_Theme.zip claude-like.css claude-like-grey.css claude-like-dark.css
@@ -36,6 +49,6 @@ jobs:
             - `Typora_Claude-Like_Theme.zip`
           generateReleaseNotes: true
           makeLatest: ${{ startsWith(github.ref_name, 'v') }}
-          name: ${{ github.ref_name }}
+          name: ${{ steps.relname.outputs.name }}
           prerelease: false
           tag: ${{ github.ref_name }}
