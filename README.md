@@ -16,6 +16,18 @@
 - `claude-like-grey.css`：Morandi 灰蓝主题
 - `claude-like-dark.css`：深色主题
 
+以上三个 CSS 文件由 `scss/` 目录下的 SCSS 源文件编译生成。每个变体只维护自己的 `:root` 调色板，所有结构样式集中在 `scss/_base.scss`。
+
+## 开发与构建
+
+```bash
+npm install         # 安装 sass
+npm run build       # 编译一次，输出三个 CSS 文件
+npm run watch       # 监听源文件变化，自动编译
+```
+
+修改主题时只需要编辑 `scss/` 下的源文件，提交前运行 `npm run build` 重新生成根目录的 CSS。
+
 ## 协议
 
 本项目基于 MIT 协议开源，详见根目录 [LICENSE](LICENSE) 文件。
@@ -56,6 +68,18 @@ It is not a direct clone of a webpage. Instead, it keeps the calm, restrained, l
 - `claude-like.css`: light theme
 - `claude-like-grey.css`: Morandi gray-blue theme
 - `claude-like-dark.css`: dark theme
+
+The three CSS files are compiled from SCSS sources under `scss/`. Each variant only maintains its own `:root` palette; all structural styles live in `scss/_base.scss`.
+
+## Development
+
+```bash
+npm install         # install sass
+npm run build       # compile once
+npm run watch       # rebuild on change
+```
+
+When editing the theme, modify the files in `scss/` and run `npm run build` to regenerate the top-level CSS files before committing.
 
 ## License
 

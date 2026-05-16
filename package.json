@@ -1,0 +1,14 @@
+{
+  "name": "claude-like-typora-theme",
+  "version": "1.0.0",
+  "description": "A Claude-inspired Typora theme with light, grey, and dark variants.",
+  "private": true,
+  "scripts": {
+    "build": "sass --no-source-map --style=expanded scss/claude-like.scss:claude-like.css scss/claude-like-dark.scss:claude-like-dark.css scss/claude-like-grey.scss:claude-like-grey.css",
+    "watch": "sass --no-source-map --style=expanded --watch scss/claude-like.scss:claude-like.css scss/claude-like-dark.scss:claude-like-dark.css scss/claude-like-grey.scss:claude-like-grey.css"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
+  },
+  "license": "MIT"
+}

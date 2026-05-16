@@ -1,0 +1,87 @@
+// Claude-like — Morandi grey-blue variant
+// Entry point: defines the palette and pulls in shared structural styles.
+
+@use 'base';
+
+:root {
+    // ----- Surfaces -----
+    --bg-color: #444a52;
+    --window-bg-color: #474d55;
+    --side-bar-bg-color: #3d434a;
+
+    // ----- Text -----
+    --text-color: #dde2e7;
+    --heading-color: #ecf0f5;
+    --control-text-color: #9aa3ac;
+    --select-text-bg-color: #5b6470;
+
+    // ----- Accent -----
+    --accent-color: #c89478;
+    --accent-color-hover: #e0b193;
+    --item-hover-bg-color: rgba(200, 148, 120, 0.14);
+    --item-active-bg-color: rgba(200, 148, 120, 0.22);
+
+    // ----- Borders / rules -----
+    --border-color: #535a63;
+    --hr-opacity: 0.8;
+
+    // ----- Fonts -----
+    --font-body: "Anthropic Serif", Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", "Hiragino Sans GB", serif;
+    --font-ui: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    --font-mono: Menlo, Monaco, "SF Mono", Consolas, "Sarasa Mono SC", "Cascadia Code", monospace;
+
+    // ----- Blockquote -----
+    --quote-bg-color: #424850;
+    --quote-border-color: #6a7178;
+    --quote-text-color: #c4cad1;
+    --focus-blockquote-border-color: rgba(200, 148, 120, 0.22);
+
+    // ----- Tables -----
+    --table-alt-color: #474d55;
+    --table-header-bg-color: #313130;
+    --table-cell-bg-color: #282827;
+    --table-border-strong-color: #6c7480;
+    --table-row-border-color: rgba(220, 226, 232, 0.14);
+    --table-hover-color: rgba(200, 148, 120, 0.07);
+
+    // ----- Code blocks -----
+    --code-bg-color: #4b525a;
+    --code-text-color: #e2e7ec;
+    --code-border-color: #5d6670;
+    --code-muted-color: #8c95a0;
+    --code-keyword-color: #b0a8d0;
+    --code-string-color: #a0c0a8;
+    --code-number-color: #d6b48c;
+    --code-symbol-color: #95aacb;
+    --code-block-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
+    --code-tooltip-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+
+    // ----- Inline code -----
+    --inline-code-color: #e6b09b;
+    --inline-code-bg-color: #4f565f;
+    --inline-code-border-color: #636b75;
+    --inline-code-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+    // ----- Misc Markdown -----
+    --md-tag-color: #9aa5b0;
+    --md-lang-color: #a0aab4;
+    --meta-block-bg-color: #494f57;
+    --meta-block-text-color: #a0aab4;
+    --mathjax-midline-bg-color: #4c525a;
+    --toc-bg-color: #3a4047;
+
+    // ----- Quick-open dialog -----
+    --quick-open-bg-color: #3f454c;
+    --quick-open-item-bg-color: #3a4047;
+    --quick-open-item-border-colors: #4a525c #535a63 #535a63 #4d555f;
+
+    // ----- Dropdown menus -----
+    --dropdown-bg-color: #3a4047;
+    --dropdown-divider-color: #535a63;
+    --dropdown-divider-opacity: 0.6;
+
+    // ----- Preferences / chrome -----
+    --preferences-active-bg-color: #a8673e;
+    --menu-btn-bg-color: #494f57;
+    --menu-btn-highlight-color: rgba(255, 255, 255, 0.06);
+}
