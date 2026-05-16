@@ -30,6 +30,7 @@
     --inline-code-color: #e1a092;
     --inline-code-bg-color: #241d19;
     --inline-code-border-color: #3a3029;
+    --rawblock-edit-panel-bd: var(--code-bg-color);
 }
 
 @include-when-export url(https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:wght@400;600;700&display=swap);
@@ -394,6 +395,10 @@ tt {
     font-family: var(--font-mono) !important;
 }
 
+#typora-source .cm-s-inner {
+    color: var(--code-text-color) !important;
+}
+
 .md-fences code,
 .md-fences tt {
     border: 0 !important;
@@ -453,6 +458,13 @@ tt {
     color: var(--code-text-color) !important;
 }
 
+#typora-source .cm-s-inner .cm-operator,
+#typora-source .cm-s-inner .cm-property,
+#typora-source .cm-s-inner .cm-variable,
+#typora-source .cm-s-inner .cm-bracket {
+    color: var(--code-text-color) !important;
+}
+
 .md-task-list-item > input {
     margin-left: -1.3em;
     accent-color: var(--accent-color);
@@ -486,6 +498,14 @@ tt {
 
 .md-mathjax-midline {
     background: #211c18;
+}
+
+div.code-tooltip,
+div.code-tooltip-content,
+.md-hover-tip .md-arrow:after,
+.popover.bottom > .arrow:after {
+    background: var(--code-bg-color) !important;
+    color: var(--code-text-color) !important;
 }
 
 #write > h3.md-focus:before {
