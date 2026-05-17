@@ -270,6 +270,14 @@ table th strong {
     border-top: 1px solid var(--code-border-color);
 }
 
+div.code-tooltip,
+div.code-tooltip-content,
+.md-hover-tip .md-arrow:after,
+.popover.bottom > .arrow:after {
+    background: var(--code-bg-color) !important;
+    color: var(--code-text-color) !important;
+}
+
 .md-fences {
     font-family: var(--font-mono);
     border: 1px solid var(--code-border-color);

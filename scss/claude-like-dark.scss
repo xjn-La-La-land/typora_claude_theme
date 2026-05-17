@@ -55,6 +55,7 @@
     --code-symbol-color: #89b1ea;
     --code-block-shadow: 0 1px 0 rgba(255, 255, 255, 0.02);
     --code-tooltip-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    --rawblock-edit-panel-bd: var(--code-bg-color);
 
     // ----- Inline code -----
     --inline-code-color: #e1a092;
@@ -84,4 +85,16 @@
     --preferences-active-bg-color: #a8673e;
     --menu-btn-bg-color: #211b17;
     --menu-btn-highlight-color: rgba(255, 255, 255, 0.08);
+}
+
+// Source Mode: CodeMirror's default token colors are unreadable on dark backgrounds.
+#typora-source .cm-s-inner {
+    color: var(--code-text-color) !important;
+}
+
+#typora-source .cm-s-inner .cm-operator,
+#typora-source .cm-s-inner .cm-property,
+#typora-source .cm-s-inner .cm-variable,
+#typora-source .cm-s-inner .cm-bracket {
+    color: var(--code-text-color) !important;
 }

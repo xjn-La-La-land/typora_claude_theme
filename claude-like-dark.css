@@ -260,6 +260,14 @@ table th strong {
   border-top: 1px solid var(--code-border-color);
 }
 
+div.code-tooltip,
+div.code-tooltip-content,
+.md-hover-tip .md-arrow:after,
+.popover.bottom > .arrow:after {
+  background: var(--code-bg-color) !important;
+  color: var(--code-text-color) !important;
+}
+
 .md-fences {
   font-family: var(--font-mono);
   border: 1px solid var(--code-border-color);
@@ -773,6 +781,7 @@ footer {
   --code-symbol-color: #89b1ea;
   --code-block-shadow: 0 1px 0 rgba(255, 255, 255, 0.02);
   --code-tooltip-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+  --rawblock-edit-panel-bd: var(--code-bg-color);
   --inline-code-color: #e1a092;
   --inline-code-bg-color: #241d19;
   --inline-code-border-color: #3a3029;
@@ -792,4 +801,15 @@ footer {
   --preferences-active-bg-color: #a8673e;
   --menu-btn-bg-color: #211b17;
   --menu-btn-highlight-color: rgba(255, 255, 255, 0.08);
+}
+
+#typora-source .cm-s-inner {
+  color: var(--code-text-color) !important;
+}
+
+#typora-source .cm-s-inner .cm-operator,
+#typora-source .cm-s-inner .cm-property,
+#typora-source .cm-s-inner .cm-variable,
+#typora-source .cm-s-inner .cm-bracket {
+  color: var(--code-text-color) !important;
 }
