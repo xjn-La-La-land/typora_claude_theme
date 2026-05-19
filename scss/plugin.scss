@@ -54,3 +54,69 @@ html[data-theme="dark"]  { @include palettes.dark; }
 html[data-theme="dark"] .claude-theme-switcher {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
 }
+
+
+// ============================================================
+// Code block enhancement: copy button + line numbers
+// ============================================================
+#write pre {
+    position: relative; // anchor for absolute-positioned copy button
+}
+
+.claude-code-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    padding: 4px 10px;
+    font: 12px/1 var(--font-ui);
+    color: var(--control-text-color);
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.18s ease, color 0.18s ease;
+
+    #write pre:hover & {
+        opacity: 1;
+    }
+
+    &:hover {
+        color: var(--heading-color);
+    }
+
+    &.is-success {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+        opacity: 1;
+    }
+
+    &.is-error {
+        color: #c14a4a;
+        border-color: #c14a4a;
+        opacity: 1;
+    }
+}
+
+// JS-rendered gutter on the left.
+// We use a non-floating inline-block layout: gutter and code share a baseline grid.
+.claude-code-has-gutter {
+    padding-left: 3em !important;
+
+    .claude-code-gutter {
+        position: absolute;
+        left: 0;
+        top: 0.9rem;
+        width: 2.5em;
+        padding-right: 0.5em;
+        font-family: var(--font-mono);
+        font-size: 0.9em;
+        line-height: 1.55;
+        color: var(--code-muted-color, var(--control-text-color));
+        text-align: right;
+        white-space: pre;
+        user-select: none;
+        pointer-events: none;
+    }
+}
