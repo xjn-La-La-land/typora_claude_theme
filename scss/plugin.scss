@@ -68,15 +68,22 @@ html[data-theme="dark"] .claude-theme-switcher {
     top: 8px;
     right: 8px;
     z-index: 2;
-    padding: 4px 10px;
-    font: 12px/1 var(--font-ui);
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: var(--control-text-color);
     background: var(--bg-color);
     border: 1px solid var(--border-color);
     border-radius: 6px;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.18s ease, color 0.18s ease;
+    transition: opacity 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+
+    // SVG sits in the middle of the button at currentColor.
+    svg { display: block; }
 
     #write pre:hover & {
         opacity: 1;
