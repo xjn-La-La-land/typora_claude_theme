@@ -20,10 +20,11 @@ function getInitialTheme() {
 function applyTheme(theme) {
   if (theme === null) {
     document.documentElement.removeAttribute('data-theme');
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
   } else {
     document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem(STORAGE_KEY, theme); } catch {}
   }
-  try { localStorage.setItem(STORAGE_KEY, theme || ''); } catch {}
 }
 
 function buildSwitcher(currentTheme) {
@@ -34,6 +35,7 @@ function buildSwitcher(currentTheme) {
 
   for (const t of THEMES) {
     const btn = document.createElement('button');
+    btn.type = 'button';
     btn.className = 'claude-theme-switcher__btn';
     btn.dataset.theme = t;
     btn.title = t;
