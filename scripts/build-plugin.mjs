@@ -17,8 +17,7 @@ async function fileExists(p) {
 async function buildCSS() {
   const entry = resolve(root, 'scss/plugin.scss');
   if (!(await fileExists(entry))) {
-    console.warn('[build-plugin] WARN: scss/plugin.scss not found — using placeholder CSS');
-    return '/* plugin.scss not yet created */';
+    throw new Error(`[build-plugin] Required source missing: ${entry}`);
   }
   const { css } = await sass.compileAsync(entry, { style: 'compressed', loadPaths: [resolve(root, 'scss')] });
   return css;
@@ -27,8 +26,7 @@ async function buildCSS() {
 async function buildJS() {
   const entry = resolve(root, 'js/_bootstrap.js');
   if (!(await fileExists(entry))) {
-    console.warn('[build-plugin] WARN: js/_bootstrap.js not found — using placeholder JS');
-    return '// _bootstrap.js not yet created';
+    throw new Error(`[build-plugin] Required source missing: ${entry}`);
   }
   const result = await esbuild({
     entryPoints: [entry],

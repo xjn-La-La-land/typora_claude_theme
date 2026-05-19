@@ -13,9 +13,13 @@ function findFootnoteBody(refHref) {
   const id = refHref.replace(/^#/, '');
   const li = document.getElementById(id);
   if (!li) return null;
-  // Strip the "back-jump" arrow link Typora appends; clone to avoid mutating original.
+  // Clone to avoid mutating the original DOM.
+  // Strip Typora's back-jump links AND any <script>/<style> for defensive injection safety.
+  // We intentionally preserve other inline tags (code, strong, em, a) so rich footnote
+  // formatting renders correctly. Footnote bodies are author-controlled local content;
+  // this is a minimal defense, not a full sanitizer.
   const clone = li.cloneNode(true);
-  clone.querySelectorAll('a.footnote-backref, a[href^="#fnref"]').forEach((a) => a.remove());
+  clone.querySelectorAll('a.footnote-backref, a[href^="#fnref"], script, style').forEach((n) => n.remove());
   return clone.innerHTML.trim();
 }
 
