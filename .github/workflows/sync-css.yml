@@ -1,10 +1,13 @@
-name: Sync CSS from SCSS
+name: Build & Sync
 
 on:
   push:
     branches: [master]
     paths:
       - 'scss/**'
+      - 'js/**'
+      - 'plugin/**'
+      - 'scripts/**'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/sync-css.yml'
@@ -13,11 +16,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: sync-css-${{ github.ref }}
+  group: build-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build-and-commit:
+  build:
     runs-on: ubuntu-latest
     if: github.actor != 'github-actions[bot]'
 
@@ -36,8 +39,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build CSS from SCSS
+      - name: Build (CSS + plugin)
         run: npm run build
+
+      - name: Smoke check plugin artifact
+        run: |
+          test -f dist/claude-like-plugin.html || { echo "::error::dist/claude-like-plugin.html missing"; exit 1; }
+          SIZE=$(wc -c < dist/claude-like-plugin.html)
+          echo "Plugin size: $SIZE bytes"
+          if [ "$SIZE" -lt 10240 ] || [ "$SIZE" -gt 307200 ]; then
+            echo "::error::Plugin size $SIZE outside [10KB, 300KB] range"
+            exit 1
+          fi
+          if grep -q "{{" dist/claude-like-plugin.html; then
+            echo "::error::Unsubstituted placeholders remain in plugin output"
+            grep -n "{{" dist/claude-like-plugin.html | head
+            exit 1
+          fi
 
       - name: Commit & push regenerated CSS
         run: |
