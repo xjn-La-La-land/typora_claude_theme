@@ -31,7 +31,7 @@ function buildContext() {
 
 function bootstrap() {
   const ctx = buildContext();
-  ctx.log(`bootstrap starting,${modules.length} module(s) registered`);
+  ctx.log(`bootstrap starting, ${modules.length} module(s) registered`);
   for (const mod of modules) {
     try {
       mod.init(ctx);
