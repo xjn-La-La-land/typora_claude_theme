@@ -1,0 +1,15 @@
+// Plugin stylesheet — injected via <head/> into Typora HTML exports.
+// Provides theme-switcher palette variants and styles for plugin controls.
+
+@use 'palettes';
+
+// Theme switcher: html[data-theme] specificity (0,0,1,1) wins over :root (0,0,1,0).
+// When the switcher sets data-theme on <html>, these blocks override the inline palette.
+html[data-theme="light"] { @include palettes.light; }
+html[data-theme="grey"]  { @include palettes.grey; }
+html[data-theme="dark"]  { @include palettes.dark; }
+
+// ============================================================
+// Plugin control CSS will be appended below in subsequent tasks.
+// All control classes use the .claude- namespace prefix.
+// ============================================================
