@@ -4,10 +4,13 @@
   "description": "A Claude-inspired Typora theme with light, grey, and dark variants.",
   "private": true,
   "scripts": {
-    "build": "sass --no-source-map --style=expanded scss/claude-like.scss:claude-like.css scss/claude-like-dark.scss:claude-like-dark.css scss/claude-like-grey.scss:claude-like-grey.css",
+    "build": "npm run build:css && npm run build:plugin",
+    "build:css": "sass --no-source-map --style=expanded scss/claude-like.scss:claude-like.css scss/claude-like-dark.scss:claude-like-dark.css scss/claude-like-grey.scss:claude-like-grey.css",
+    "build:plugin": "node scripts/build-plugin.mjs",
     "watch": "sass --no-source-map --style=expanded --watch scss/claude-like.scss:claude-like.css scss/claude-like-dark.scss:claude-like-dark.css scss/claude-like-grey.scss:claude-like-grey.css"
   },
   "devDependencies": {
+    "esbuild": "^0.28.0",
     "sass": "^1.77.0"
   },
   "license": "MIT"
