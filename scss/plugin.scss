@@ -410,16 +410,47 @@ html[data-theme="grey"] .claude-footnote-popover {
 
     &__item {
         margin: 2px 0;
+        position: relative; // anchor for the absolute-positioned chevron
         &.is-level-1 > .claude-toc__link { font-weight: 600; }
         &.is-active > .claude-toc__link {
             color: var(--accent-color);
             border-left-color: var(--accent-color);
         }
+        // Hide the child subtree when this branch is collapsed.
+        &.is-collapsed > ol { display: none; }
+    }
+
+    &__chevron {
+        position: absolute;
+        left: 2px;
+        top: 4px;
+        z-index: 1;       // above the link so the click registers on chevron
+        width: 14px;
+        height: 14px;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        color: var(--control-text-color);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.18s ease, color 0.18s ease;
+
+        svg { display: block; }
+        &:hover { color: var(--heading-color); }
+    }
+
+    // Chevron points right when collapsed (default), rotates 90° when expanded.
+    &__item:not(.is-collapsed) > .claude-toc__chevron {
+        transform: rotate(90deg);
     }
 
     &__link {
         display: block;
-        padding: 3px 8px;
+        // Left padding reserves space for the chevron (14px wide + ~4px gap).
+        // Leaf items have no chevron rendered but keep the indent for alignment.
+        padding: 3px 8px 3px 18px;
         color: var(--control-text-color);
         text-decoration: none;
         border-left: 2px solid transparent;

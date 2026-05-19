@@ -10,10 +10,15 @@
  *   6. On viewports < 1100px, collapse panel to a hamburger.
  */
 
-const MAX_LEVEL = 3; // show h1-h3 only
+const MAX_LEVEL = 6; // show all Markdown heading levels (h1-h6)
+const COLLAPSE_LEVEL = 3; // items at this level and deeper start collapsed
 const TOC_WIDTH_STORAGE_KEY = 'claude-toc-width';
 const TOC_WIDTH_MIN = 160;
 const TOC_WIDTH_MAX = 480;
+
+// 8x8 chevron used as the per-branch expand/collapse toggle.
+// Points right when collapsed; CSS rotates it 90° when the branch is expanded.
+const ICON_CHEVRON = '<svg viewBox="0 0 10 10" width="8" height="8" fill="currentColor" aria-hidden="true"><path d="M3.5 2.5L7 5L3.5 7.5z"/></svg>';
 
 function slugify(text) {
   return (text || '')
@@ -48,6 +53,7 @@ function renderList(items) {
   const root = document.createElement('ol');
   root.className = 'claude-toc__list';
   const stack = [{ level: 0, ol: root }];
+  const created = []; // { li, level, childOl } for the post-process pass
 
   for (const it of items) {
     while (stack[stack.length - 1].level >= it.level) stack.pop();
@@ -64,7 +70,31 @@ function renderList(items) {
     const childOl = document.createElement('ol');
     li.appendChild(childOl);
     stack.push({ level: it.level, ol: childOl });
+    created.push({ li, level: it.level, childOl });
   }
+
+  // Second pass:
+  //   - leaf items: remove the empty child <ol> we always preallocated
+  //   - parents: insert a chevron toggle; default-collapse if level >= COLLAPSE_LEVEL
+  for (const entry of created) {
+    if (entry.childOl.children.length === 0) {
+      entry.childOl.remove();
+      continue;
+    }
+    const chevron = document.createElement('button');
+    chevron.type = 'button';
+    chevron.className = 'claude-toc__chevron';
+    chevron.setAttribute('aria-label', '展开/收起');
+    chevron.innerHTML = ICON_CHEVRON;
+    chevron.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      entry.li.classList.toggle('is-collapsed');
+    });
+    entry.li.insertBefore(chevron, entry.li.firstChild);
+    if (entry.level >= COLLAPSE_LEVEL) entry.li.classList.add('is-collapsed');
+  }
+
   return root;
 }
 
