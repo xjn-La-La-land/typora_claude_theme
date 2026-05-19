@@ -39,26 +39,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build CSS from SCSS
+      - name: Build CSS + plugin
         run: npm run build
 
       - name: Build zip package
-        run: zip -j Typora_Claude-Like_Theme.zip claude-like.css claude-like-grey.css claude-like-dark.css
+        run: zip -j Typora_Claude-Like_Theme.zip claude-like.css claude-like-grey.css claude-like-dark.css dist/claude-like-plugin.html
 
       - name: Publish release
         uses: ncipollo/release-action@v1
         with:
           artifactErrorsFailBuild: true
           allowUpdates: true
-          artifacts: "claude-like.css,claude-like-grey.css,claude-like-dark.css,Typora_Claude-Like_Theme.zip"
+          artifacts: "claude-like.css,claude-like-grey.css,claude-like-dark.css,dist/claude-like-plugin.html,Typora_Claude-Like_Theme.zip"
           body: |
             Release for `${{ github.ref_name }}`.
 
             Included files:
-            - `claude-like.css`
-            - `claude-like-grey.css`
-            - `claude-like-dark.css`
-            - `Typora_Claude-Like_Theme.zip`
+            - `claude-like.css` — light theme
+            - `claude-like-grey.css` — Morandi grey-blue theme
+            - `claude-like-dark.css` — dark theme
+            - `claude-like-plugin.html` — HTML enhancement plugin; paste into Typora export setting (see README)
+            - `Typora_Claude-Like_Theme.zip` — all of the above bundled
           generateReleaseNotes: true
           makeLatest: ${{ startsWith(github.ref_name, 'v') }}
           name: ${{ steps.relname.outputs.name }}
