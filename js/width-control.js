@@ -1,78 +1,84 @@
 /**
- * Content width control — three buttons (narrow / default / wide) sitting
- * below the theme switcher. Clicking sets a data-content-width attribute on
- * <html>; plugin.scss has the corresponding `#write { max-width }` overrides.
- * "default" removes the attribute so the theme's responsive max-widths apply.
- * Selection persists via localStorage.
+ * Content width control — a horizontal slider that adjusts #write's max-width
+ * continuously. The pill sits below the theme switcher in the top-right.
+ *
+ * When the user touches the slider, we set --claude-content-max on <html> and
+ * mark data-content-width="custom"; plugin.scss has the gated override:
+ *   html[data-content-width] #write { max-width: var(--claude-content-max) !important }
+ *
+ * On first load with no stored value, no override is applied and the theme's
+ * responsive media queries decide the width.
+ *
+ * Storage: localStorage["claude-content-width"] = "<integer px>"
  */
 
 const STORAGE_KEY = 'claude-content-width';
-const WIDTHS = ['narrow', 'default', 'wide'];
+const WIDTH_MIN = 560;
+const WIDTH_MAX = 1440;
+const WIDTH_STEP = 10;
+const WIDTH_DEFAULT = 980; // slider start position when no preference is stored
 
-// 14x10 SVGs: three horizontal bars whose length grows with the choice.
-// currentColor lets the bars inherit the button's text color.
-const ICON_NARROW  = '<svg viewBox="0 0 20 14" width="14" height="10" fill="currentColor" aria-hidden="true"><rect x="6" y="3"    width="8"  height="1.5"/><rect x="6" y="6.25" width="8"  height="1.5"/><rect x="6" y="9.5"  width="8"  height="1.5"/></svg>';
-const ICON_DEFAULT = '<svg viewBox="0 0 20 14" width="14" height="10" fill="currentColor" aria-hidden="true"><rect x="4" y="3"    width="12" height="1.5"/><rect x="4" y="6.25" width="12" height="1.5"/><rect x="4" y="9.5"  width="12" height="1.5"/></svg>';
-const ICON_WIDE    = '<svg viewBox="0 0 20 14" width="14" height="10" fill="currentColor" aria-hidden="true"><rect x="2" y="3"    width="16" height="1.5"/><rect x="2" y="6.25" width="16" height="1.5"/><rect x="2" y="9.5"  width="16" height="1.5"/></svg>';
-
-const ICONS  = { narrow: ICON_NARROW, default: ICON_DEFAULT, wide: ICON_WIDE };
-const LABELS = { narrow: '窄', default: '默认', wide: '宽' };
-
-function getInitialWidth() {
+function getStoredWidth() {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (WIDTHS.includes(stored)) return stored;
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw === null) return null;
+    const v = parseInt(raw, 10);
+    if (Number.isNaN(v)) return null;
+    if (v < WIDTH_MIN || v > WIDTH_MAX) return null;
+    return v;
   } catch {
-    // localStorage unavailable
+    return null;
   }
-  return null; // null = use theme's responsive default (no override)
 }
 
 function applyWidth(width) {
-  if (width === null || width === 'default') {
-    document.documentElement.removeAttribute('data-content-width');
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
-  } else {
-    document.documentElement.setAttribute('data-content-width', width);
-    try { localStorage.setItem(STORAGE_KEY, width); } catch {}
-  }
+  document.documentElement.style.setProperty('--claude-content-max', `${width}px`);
+  document.documentElement.setAttribute('data-content-width', 'custom');
+  try { localStorage.setItem(STORAGE_KEY, String(width)); } catch {}
 }
 
-function buildControl(currentWidth) {
+function buildControl(initialWidth) {
   const root = document.createElement('div');
   root.className = 'claude-width-control';
   root.setAttribute('role', 'group');
   root.setAttribute('aria-label', '正文宽度');
 
-  for (const w of WIDTHS) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'claude-width-control__btn';
-    btn.dataset.width = w;
-    btn.title = LABELS[w];
-    btn.setAttribute('aria-label', `正文宽度：${LABELS[w]}`);
-    btn.innerHTML = ICONS[w];
-    // "default" is implicit when no localStorage value exists.
-    if (w === currentWidth || (currentWidth === null && w === 'default')) {
-      btn.classList.add('is-active');
-    }
-    btn.addEventListener('click', () => {
-      applyWidth(w);
-      root.querySelectorAll('.claude-width-control__btn').forEach((b) => {
-        b.classList.toggle('is-active', b.dataset.width === w);
-      });
-    });
-    root.appendChild(btn);
-  }
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.className = 'claude-width-control__slider';
+  slider.min = String(WIDTH_MIN);
+  slider.max = String(WIDTH_MAX);
+  slider.step = String(WIDTH_STEP);
+  slider.value = String(initialWidth ?? WIDTH_DEFAULT);
+  slider.title = '正文宽度';
+  slider.setAttribute('aria-label', '正文宽度');
+
+  // Updates the CSS variable that drives the linear-gradient track fill.
+  // WebKit/Blink lack a native "filled-portion" pseudo, so we synthesize it
+  // with a gradient on the input's own background.
+  const updateFill = () => {
+    const v = parseInt(slider.value, 10);
+    const pct = ((v - WIDTH_MIN) / (WIDTH_MAX - WIDTH_MIN)) * 100;
+    slider.style.setProperty('--claude-slider-fill', `${pct}%`);
+  };
+  updateFill();
+
+  slider.addEventListener('input', () => {
+    const v = parseInt(slider.value, 10);
+    applyWidth(v);
+    updateFill();
+  });
+
+  root.appendChild(slider);
   return root;
 }
 
 export default {
   name: 'width-control',
   init(ctx) {
-    const initial = getInitialWidth();
-    if (initial) applyWidth(initial);
-    const control = buildControl(initial);
+    const stored = getStoredWidth();
+    if (stored !== null) applyWidth(stored);
+    const control = buildControl(stored);
     document.body.appendChild(control);
     ctx.log('width-control mounted');
   },

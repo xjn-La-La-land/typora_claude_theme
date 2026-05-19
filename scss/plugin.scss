@@ -59,44 +59,97 @@ html[data-theme="dark"] .claude-theme-switcher {
 // ============================================================
 // Content width control (sits below the theme switcher)
 // ============================================================
+// Horizontal slider pill. Native <input type="range"> styled to match the
+// theme. The "filled" portion left of the thumb is drawn via a linear-
+// gradient on the input's own background, driven by --claude-slider-fill
+// (which JS updates on every `input` event).
 .claude-width-control {
     position: fixed;
     top: 60px;  // theme-switcher height (~32px) + 12px gap
     right: 16px;
     z-index: 150;
     display: flex;
-    gap: 6px;
-    padding: 6px;
+    align-items: center;
+    padding: 8px 14px;
     border-radius: 999px;
     background: var(--bg-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     font-family: var(--font-ui);
 
-    &__btn {
-        width: 22px;
-        height: 22px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+    &__slider {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 120px;
+        height: 14px;
+        margin: 0;
         padding: 0;
-        border: 1px solid var(--border-color);
-        border-radius: 50%;
-        background: var(--bg-color);
-        color: var(--control-text-color);
+        background: linear-gradient(
+            to right,
+            var(--accent-color) 0%,
+            var(--accent-color) var(--claude-slider-fill, 50%),
+            var(--border-color) var(--claude-slider-fill, 50%),
+            var(--border-color) 100%
+        );
+        border-radius: 2px;
+        outline: none;
         cursor: pointer;
-        transition: transform 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
 
-        svg { display: block; }
-
-        &.is-active {
-            color: var(--accent-color);
-            box-shadow: 0 0 0 2px var(--accent-color);
-            transform: scale(1.05);
+        // WebKit / Blink (Chrome, Safari, modern Edge) ----
+        &::-webkit-slider-runnable-track {
+            height: 4px;
+            background: transparent; // the input's bg gradient shows through
+            border-radius: 2px;
+        }
+        &::-webkit-slider-thumb {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            margin-top: -5px;  // (track 4 - thumb 14) / 2 = -5
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+            cursor: grab;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        &:hover::-webkit-slider-thumb { transform: scale(1.15); }
+        &:active::-webkit-slider-thumb {
+            transform: scale(1.15);
+            cursor: grabbing;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.24);
         }
 
-        &:hover:not(.is-active) {
-            transform: scale(1.08);
-            color: var(--heading-color);
+        // Firefox ----
+        &::-moz-range-track {
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+        }
+        &::-moz-range-progress {
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+        &::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+            cursor: grab;
+            transition: transform 0.15s ease;
+        }
+        &:hover::-moz-range-thumb { transform: scale(1.15); }
+        &:active::-moz-range-thumb { transform: scale(1.15); cursor: grabbing; }
+
+        // Keyboard focus: ring around the thumb (matches active dot in theme switcher).
+        &:focus-visible::-webkit-slider-thumb {
+            box-shadow: 0 0 0 3px rgba(188, 106, 58, 0.25), 0 1px 3px rgba(0, 0, 0, 0.18);
+        }
+        &:focus-visible::-moz-range-thumb {
+            box-shadow: 0 0 0 3px rgba(188, 106, 58, 0.25), 0 1px 3px rgba(0, 0, 0, 0.18);
         }
     }
 }
@@ -106,11 +159,11 @@ html[data-theme="grey"] .claude-width-control {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
 }
 
-// Override the theme's #write max-width when the user picks a non-default width.
-// "default" removes the attribute so the theme's responsive media-query rules
-// take over again. !important is belt-and-suspenders against future theme rules.
-html[data-content-width="narrow"] #write { max-width: 760px !important; }
-html[data-content-width="wide"]   #write { max-width: 1280px !important; }
+// Override the theme's #write max-width when the user has set a custom value.
+// Without the attribute, the rule doesn't apply — theme media queries decide.
+html[data-content-width] #write {
+    max-width: var(--claude-content-max) !important;
+}
 
 
 // ============================================================
