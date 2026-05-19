@@ -1,87 +1,11 @@
 // Claude-like — Dark variant
-// Entry point: defines the palette and pulls in shared structural styles.
+// Entry point: applies the dark palette via shared mixin and pulls in shared structural styles.
 
+@use 'palettes';
 @use 'base';
 
 :root {
-    // ----- Surfaces -----
-    --bg-color: #151210;
-    --window-bg-color: #181512;
-    --side-bar-bg-color: #171411;
-
-    // ----- Text -----
-    --text-color: #ddd4ca;
-    --heading-color: #f2e9df;
-    --control-text-color: #a7998b;
-    --select-text-bg-color: #5a4234;
-
-    // ----- Accent -----
-    --accent-color: #d59567;
-    --accent-color-hover: #efb892;
-    --item-hover-bg-color: rgba(213, 149, 103, 0.1);
-    --item-active-bg-color: rgba(213, 149, 103, 0.18);
-
-    // ----- Borders / rules -----
-    --border-color: #2f2924;
-    --hr-opacity: 0.8;
-
-    // ----- Fonts -----
-    --font-body: "Anthropic Serif", Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", "Hiragino Sans GB", serif;
-    --font-ui: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
-    --font-mono: Menlo, Monaco, "SF Mono", Consolas, "Sarasa Mono SC", "Cascadia Code", monospace;
-
-    // ----- Blockquote -----
-    --quote-bg-color: #1c1815;
-    --quote-border-color: #4c4037;
-    --quote-text-color: #d0c2b4;
-    --focus-blockquote-border-color: rgba(209, 138, 88, 0.2);
-
-    // ----- Tables -----
-    --table-header-bg-color: #1f1f1f;
-    --table-cell-bg-color: #161616;
-    --table-hover-color: rgba(213, 149, 103, 0.06);
-
-    // ----- Code blocks -----
-    --code-bg-color: #1d1917;
-    --code-text-color: #e8dfd5;
-    --code-border-color: #332b25;
-    --code-muted-color: #9f8f81;
-    --code-keyword-color: #b899ff;
-    --code-string-color: #81cb82;
-    --code-number-color: #d9a56f;
-    --code-symbol-color: #89b1ea;
-    --code-block-shadow: 0 1px 0 rgba(255, 255, 255, 0.02);
-    --code-tooltip-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
-    --rawblock-edit-panel-bd: var(--code-bg-color);
-
-    // ----- Inline code -----
-    --inline-code-color: #e1a092;
-    --inline-code-bg-color: #241d19;
-    --inline-code-border-color: #3a3029;
-    --inline-code-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-
-    // ----- Misc Markdown -----
-    --md-tag-color: #a78c76;
-    --md-lang-color: #b69177;
-    --meta-block-bg-color: #1f1b18;
-    --meta-block-text-color: #b3a392;
-    --mathjax-midline-bg-color: #211c18;
-    --toc-bg-color: #1a1613;
-
-    // ----- Quick-open dialog -----
-    --quick-open-bg-color: #1b1714;
-    --quick-open-item-bg-color: #171411;
-    --quick-open-item-border-colors: #211c17 #2f2924 #2f2924 #251f1a;
-
-    // ----- Dropdown menus -----
-    --dropdown-bg-color: #1a1613;
-    --dropdown-divider-color: #342d27;
-    --dropdown-divider-opacity: 0.6;
-
-    // ----- Preferences / chrome -----
-    --preferences-active-bg-color: #a8673e;
-    --menu-btn-bg-color: #211b17;
-    --menu-btn-highlight-color: rgba(255, 255, 255, 0.08);
+    @include palettes.dark;
 }
 
 // Source Mode: CodeMirror's default token colors are unreadable on dark backgrounds.

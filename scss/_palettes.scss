@@ -1,0 +1,245 @@
+// _palettes.scss
+// Three palette mixins. Each variable must exist in all three with semantically equivalent role.
+
+@mixin light {
+    // ----- Surfaces -----
+    --bg-color: #faf9f5;
+    --window-bg-color: #f6f3ed;
+    --side-bar-bg-color: #f5f2ec;
+
+    // ----- Text -----
+    --text-color: #2b2621;
+    --heading-color: #1c1815;
+    --control-text-color: #72695e;
+    --select-text-bg-color: #e8ddd0;
+
+    // ----- Accent -----
+    --accent-color: #bc6a3a;
+    --accent-color-hover: #9d552d;
+    --item-hover-bg-color: rgba(194, 113, 62, 0.08);
+    --item-active-bg-color: rgba(188, 106, 58, 0.14);
+
+    // ----- Borders / rules -----
+    --border-color: #ddd5ca;
+    --hr-opacity: 0.75;
+
+    // ----- Fonts -----
+    --font-body: "Anthropic Serif", Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", "Hiragino Sans GB", serif;
+    --font-ui: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    --font-mono: Menlo, Monaco, "SF Mono", Consolas, "Sarasa Mono SC", "Cascadia Code", monospace;
+
+    // ----- Blockquote -----
+    --quote-bg-color: #f3ede5;
+    --quote-border-color: #d8cbbb;
+    --quote-text-color: #625950;
+    --focus-blockquote-border-color: rgba(121, 83, 57, 0.14);
+
+    // ----- Tables -----
+    --table-header-bg-color: #efefee;
+    --table-cell-bg-color: #f3f3f2;
+    --table-hover-color: rgba(188, 106, 58, 0.05);
+
+    // ----- Code blocks -----
+    --code-bg-color: #fcfcfa;
+    --code-text-color: #1c1815;
+    --code-border-color: #e9e2d8;
+    --code-muted-color: #6f665d;
+    --code-keyword-color: #7b2ff7;
+    --code-string-color: #2f8f2f;
+    --code-number-color: #c06a2a;
+    --code-symbol-color: #2c5ec6;
+    --code-block-shadow: 0 1px 0 rgba(43, 38, 33, 0.03);
+    --code-tooltip-shadow: 0 10px 24px rgba(73, 49, 34, 0.08);
+    --rawblock-edit-panel-bd: var(--code-bg-color);
+
+    // ----- Inline code -----
+    --inline-code-color: #b14a40;
+    --inline-code-bg-color: #f2eeea;
+    --inline-code-border-color: #d7cec5;
+    --inline-code-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+
+    // ----- Misc Markdown -----
+    --md-tag-color: #a48870;
+    --md-lang-color: #9f7b64;
+    --meta-block-bg-color: #f6f1ea;
+    --meta-block-text-color: #6b6158;
+    --mathjax-midline-bg-color: #f7f2eb;
+    --toc-bg-color: var(--quote-bg-color);
+
+    // ----- Quick-open dialog -----
+    --quick-open-bg-color: #faf4ec;
+    --quick-open-item-bg-color: #fdf9f4;
+    --quick-open-item-border-colors: #fff9f2 #e7dac8 #e7dac8 #efe1d0;
+
+    // ----- Dropdown menus -----
+    --dropdown-bg-color: #fcf7f1;
+    --dropdown-divider-color: #e5d7c7;
+    --dropdown-divider-opacity: 0.5;
+
+    // ----- Preferences / chrome -----
+    --preferences-active-bg-color: #a86a45;
+    --menu-btn-bg-color: #f6efe6;
+    --menu-btn-highlight-color: rgba(255, 255, 255, 0.82);
+}
+
+@mixin grey {
+    // ----- Surfaces -----
+    --bg-color: #444a52;
+    --window-bg-color: #474d55;
+    --side-bar-bg-color: #3d434a;
+
+    // ----- Text -----
+    --text-color: #dde2e7;
+    --heading-color: #ecf0f5;
+    --control-text-color: #9aa3ac;
+    --select-text-bg-color: #5b6470;
+
+    // ----- Accent -----
+    --accent-color: #c89478;
+    --accent-color-hover: #e0b193;
+    --item-hover-bg-color: rgba(200, 148, 120, 0.14);
+    --item-active-bg-color: rgba(200, 148, 120, 0.22);
+
+    // ----- Borders / rules -----
+    --border-color: #535a63;
+    --hr-opacity: 0.8;
+
+    // ----- Fonts -----
+    --font-body: "Anthropic Serif", Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", "Hiragino Sans GB", serif;
+    --font-ui: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    --font-mono: Menlo, Monaco, "SF Mono", Consolas, "Sarasa Mono SC", "Cascadia Code", monospace;
+
+    // ----- Blockquote -----
+    --quote-bg-color: #424850;
+    --quote-border-color: #6a7178;
+    --quote-text-color: #c4cad1;
+    --focus-blockquote-border-color: rgba(200, 148, 120, 0.22);
+
+    // ----- Tables -----
+    --table-header-bg-color: #313130;
+    --table-cell-bg-color: #282827;
+    --table-hover-color: rgba(200, 148, 120, 0.07);
+
+    // ----- Code blocks -----
+    --code-bg-color: #4b525a;
+    --code-text-color: #e2e7ec;
+    --code-border-color: #5d6670;
+    --code-muted-color: #8c95a0;
+    --code-keyword-color: #b0a8d0;
+    --code-string-color: #a0c0a8;
+    --code-number-color: #d6b48c;
+    --code-symbol-color: #95aacb;
+    --code-block-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
+    --code-tooltip-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+    --rawblock-edit-panel-bd: var(--code-bg-color);
+
+    // ----- Inline code -----
+    --inline-code-color: #e6b09b;
+    --inline-code-bg-color: #4f565f;
+    --inline-code-border-color: #636b75;
+    --inline-code-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+    // ----- Misc Markdown -----
+    --md-tag-color: #9aa5b0;
+    --md-lang-color: #a0aab4;
+    --meta-block-bg-color: #494f57;
+    --meta-block-text-color: #a0aab4;
+    --mathjax-midline-bg-color: #4c525a;
+    --toc-bg-color: #3a4047;
+
+    // ----- Quick-open dialog -----
+    --quick-open-bg-color: #3f454c;
+    --quick-open-item-bg-color: #3a4047;
+    --quick-open-item-border-colors: #4a525c #535a63 #535a63 #4d555f;
+
+    // ----- Dropdown menus -----
+    --dropdown-bg-color: #3a4047;
+    --dropdown-divider-color: #535a63;
+    --dropdown-divider-opacity: 0.6;
+
+    // ----- Preferences / chrome -----
+    --preferences-active-bg-color: #a8673e;
+    --menu-btn-bg-color: #494f57;
+    --menu-btn-highlight-color: rgba(255, 255, 255, 0.06);
+}
+
+@mixin dark {
+    // ----- Surfaces -----
+    --bg-color: #151210;
+    --window-bg-color: #181512;
+    --side-bar-bg-color: #171411;
+
+    // ----- Text -----
+    --text-color: #ddd4ca;
+    --heading-color: #f2e9df;
+    --control-text-color: #a7998b;
+    --select-text-bg-color: #5a4234;
+
+    // ----- Accent -----
+    --accent-color: #d59567;
+    --accent-color-hover: #efb892;
+    --item-hover-bg-color: rgba(213, 149, 103, 0.1);
+    --item-active-bg-color: rgba(213, 149, 103, 0.18);
+
+    // ----- Borders / rules -----
+    --border-color: #2f2924;
+    --hr-opacity: 0.8;
+
+    // ----- Fonts -----
+    --font-body: "Anthropic Serif", Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", "Hiragino Sans GB", serif;
+    --font-ui: "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    --font-mono: Menlo, Monaco, "SF Mono", Consolas, "Sarasa Mono SC", "Cascadia Code", monospace;
+
+    // ----- Blockquote -----
+    --quote-bg-color: #1c1815;
+    --quote-border-color: #4c4037;
+    --quote-text-color: #d0c2b4;
+    --focus-blockquote-border-color: rgba(209, 138, 88, 0.2);
+
+    // ----- Tables -----
+    --table-header-bg-color: #1f1f1f;
+    --table-cell-bg-color: #161616;
+    --table-hover-color: rgba(213, 149, 103, 0.06);
+
+    // ----- Code blocks -----
+    --code-bg-color: #1d1917;
+    --code-text-color: #e8dfd5;
+    --code-border-color: #332b25;
+    --code-muted-color: #9f8f81;
+    --code-keyword-color: #b899ff;
+    --code-string-color: #81cb82;
+    --code-number-color: #d9a56f;
+    --code-symbol-color: #89b1ea;
+    --code-block-shadow: 0 1px 0 rgba(255, 255, 255, 0.02);
+    --code-tooltip-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    --rawblock-edit-panel-bd: var(--code-bg-color);
+
+    // ----- Inline code -----
+    --inline-code-color: #e1a092;
+    --inline-code-bg-color: #241d19;
+    --inline-code-border-color: #3a3029;
+    --inline-code-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+
+    // ----- Misc Markdown -----
+    --md-tag-color: #a78c76;
+    --md-lang-color: #b69177;
+    --meta-block-bg-color: #1f1b18;
+    --meta-block-text-color: #b3a392;
+    --mathjax-midline-bg-color: #211c18;
+    --toc-bg-color: #1a1613;
+
+    // ----- Quick-open dialog -----
+    --quick-open-bg-color: #1b1714;
+    --quick-open-item-bg-color: #171411;
+    --quick-open-item-border-colors: #211c17 #2f2924 #2f2924 #251f1a;
+
+    // ----- Dropdown menus -----
+    --dropdown-bg-color: #1a1613;
+    --dropdown-divider-color: #342d27;
+    --dropdown-divider-opacity: 0.6;
+
+    // ----- Preferences / chrome -----
+    --preferences-active-bg-color: #a8673e;
+    --menu-btn-bg-color: #211b17;
+    --menu-btn-highlight-color: rgba(255, 255, 255, 0.08);
+}
