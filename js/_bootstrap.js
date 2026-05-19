@@ -6,19 +6,19 @@
  * Errors in one module are caught and logged; other modules continue.
  */
 
-// Modules will be imported here as they're added in subsequent tasks.
+// Modules
 import themeSwitcher from './theme-switcher.js';
 import codeEnhance from './code-enhance.js';
 import imageLightbox from './image-lightbox.js';
 import footnote from './footnote.js';
-// import toc from './toc.js';
+import toc from './toc.js';
 
 const modules = [
   themeSwitcher,
   codeEnhance,
   imageLightbox,
   footnote,
-  // toc,
+  toc,
 ];
 
 function buildContext() {
