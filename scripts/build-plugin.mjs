@@ -16,14 +16,20 @@ async function fileExists(p) {
 
 async function buildCSS() {
   const entry = resolve(root, 'scss/plugin.scss');
-  if (!(await fileExists(entry))) return '/* plugin.scss not yet created */';
-  const { css } = sass.compile(entry, { style: 'compressed', loadPaths: [resolve(root, 'scss')] });
+  if (!(await fileExists(entry))) {
+    console.warn('[build-plugin] WARN: scss/plugin.scss not found — using placeholder CSS');
+    return '/* plugin.scss not yet created */';
+  }
+  const { css } = await sass.compileAsync(entry, { style: 'compressed', loadPaths: [resolve(root, 'scss')] });
   return css;
 }
 
 async function buildJS() {
   const entry = resolve(root, 'js/_bootstrap.js');
-  if (!(await fileExists(entry))) return '// _bootstrap.js not yet created';
+  if (!(await fileExists(entry))) {
+    console.warn('[build-plugin] WARN: js/_bootstrap.js not found — using placeholder JS');
+    return '// _bootstrap.js not yet created';
+  }
   const result = await esbuild({
     entryPoints: [entry],
     bundle: true,
