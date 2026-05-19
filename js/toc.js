@@ -11,6 +11,9 @@
  */
 
 const MAX_LEVEL = 3; // show h1-h3 only
+const TOC_WIDTH_STORAGE_KEY = 'claude-toc-width';
+const TOC_WIDTH_MIN = 160;
+const TOC_WIDTH_MAX = 480;
 
 function slugify(text) {
   return (text || '')
@@ -109,7 +112,63 @@ function buildPanel(items) {
   header.textContent = '目录';
   aside.appendChild(header);
   aside.appendChild(renderList(items));
+  // Resize handle at the right edge; CSS handles the visual treatment.
+  const handle = document.createElement('div');
+  handle.className = 'claude-toc__resize';
+  handle.setAttribute('aria-hidden', 'true');
+  aside.appendChild(handle);
   return aside;
+}
+
+function clampWidth(w) {
+  return Math.max(TOC_WIDTH_MIN, Math.min(TOC_WIDTH_MAX, w));
+}
+
+function restoreWidth(panel) {
+  try {
+    const stored = parseInt(localStorage.getItem(TOC_WIDTH_STORAGE_KEY), 10);
+    if (!Number.isNaN(stored)) {
+      panel.style.setProperty('--claude-toc-width', `${clampWidth(stored)}px`);
+    }
+  } catch {}
+}
+
+function attachResize(panel) {
+  const handle = panel.querySelector('.claude-toc__resize');
+  if (!handle) return;
+  let startX = 0;
+  let startWidth = 0;
+  let dragging = false;
+
+  function onMouseMove(e) {
+    if (!dragging) return;
+    const w = clampWidth(startWidth + (e.clientX - startX));
+    panel.style.setProperty('--claude-toc-width', `${w}px`);
+  }
+
+  function onMouseUp() {
+    if (!dragging) return;
+    dragging = false;
+    panel.classList.remove('is-resizing');
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    try {
+      const final = parseInt(panel.style.getPropertyValue('--claude-toc-width'), 10);
+      if (!Number.isNaN(final)) localStorage.setItem(TOC_WIDTH_STORAGE_KEY, String(final));
+    } catch {}
+  }
+
+  handle.addEventListener('mousedown', (e) => {
+    // Resize handle is hidden in collapsed state; defense if user finds it anyway.
+    if (panel.classList.contains('is-collapsed')) return;
+    e.preventDefault();
+    startX = e.clientX;
+    startWidth = panel.getBoundingClientRect().width;
+    dragging = true;
+    panel.classList.add('is-resizing');
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
 }
 
 export default {
@@ -122,7 +181,9 @@ export default {
       return;
     }
     const panel = buildPanel(items);
+    restoreWidth(panel);
     document.body.appendChild(panel);
+    attachResize(panel);
 
     // Smooth-scroll behavior on TOC links (let location.hash update naturally).
     panel.addEventListener('click', (e) => {
