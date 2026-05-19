@@ -173,3 +173,37 @@ html[data-theme="dark"] .claude-theme-switcher {
         text-align: center;
     }
 }
+
+
+// ============================================================
+// Footnote popover
+// ============================================================
+.claude-footnote-popover {
+    position: absolute;
+    z-index: 200;
+    max-width: 360px;
+    padding: 12px 16px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    font: 0.92em/1.5 var(--font-body);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+
+    &.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    p { margin: 0.3em 0; }
+    p:first-child { margin-top: 0; }
+    p:last-child { margin-bottom: 0; }
+}
+
+html[data-theme="dark"] .claude-footnote-popover,
+html[data-theme="grey"] .claude-footnote-popover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
+}

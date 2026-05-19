@@ -10,14 +10,14 @@
 import themeSwitcher from './theme-switcher.js';
 import codeEnhance from './code-enhance.js';
 import imageLightbox from './image-lightbox.js';
-// import footnote from './footnote.js';
+import footnote from './footnote.js';
 // import toc from './toc.js';
 
 const modules = [
   themeSwitcher,
   codeEnhance,
   imageLightbox,
-  // footnote,
+  footnote,
   // toc,
 ];
 
