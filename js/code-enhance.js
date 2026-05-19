@@ -88,6 +88,11 @@ function attachCopyButton(pre) {
       }, 2000);
     }
   });
+  // JS-managed hover toggle: CSS :hover on pre.md-fences can be flaky when
+  // CodeMirror sub-elements have their own pointer-event handling. Explicit
+  // mouseenter/mouseleave on the outer pre is more reliable.
+  pre.addEventListener('mouseenter', () => pre.classList.add('claude-pre-active'));
+  pre.addEventListener('mouseleave', () => pre.classList.remove('claude-pre-active'));
   pre.appendChild(btn);
 }
 

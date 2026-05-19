@@ -19,7 +19,13 @@ html[data-theme="dark"]  { @include palettes.dark; }
     right: 16px;
     z-index: 150; // above TOC (100), below popover (200) per design §6
     display: flex;
-    gap: 6px;
+    // Match width with the width-control pill below. Dots are centered with a
+    // generous gap so the three pills (theme above, width below) feel like
+    // intentional siblings rather than mismatched controls.
+    width: 130px;
+    box-sizing: border-box;
+    justify-content: center;
+    gap: 16px;
     padding: 6px;
     border-radius: 999px;
     background: var(--bg-color);
@@ -70,6 +76,10 @@ html[data-theme="dark"] .claude-theme-switcher {
     z-index: 150;
     display: flex;
     align-items: center;
+    // Match the theme-switcher pill width above so the two stacked controls
+    // look like a single unit.
+    width: 130px;
+    box-sizing: border-box;
     padding: 8px 14px;
     border-radius: 999px;
     background: var(--bg-color);
@@ -79,7 +89,8 @@ html[data-theme="dark"] .claude-theme-switcher {
     &__slider {
         appearance: none;
         -webkit-appearance: none;
-        width: 120px;
+        // Fill the pill width-wise so it grows/shrinks with the container.
+        width: 100%;
         height: 14px;
         margin: 0;
         padding: 0;
@@ -178,8 +189,9 @@ html[data-content-width] #write {
     top: 8px;
     right: 8px;
     z-index: 2;
-    width: 26px;
-    height: 26px;
+    // Enlarged from 26 → 32 to give a comfortable click target.
+    width: 32px;
+    height: 32px;
     padding: 0;
     display: inline-flex;
     align-items: center;
@@ -195,12 +207,9 @@ html[data-content-width] #write {
     // SVG sits in the middle of the button at currentColor.
     svg { display: block; }
 
-    #write pre:hover & {
-        opacity: 1;
-    }
-
     &:hover {
         color: var(--heading-color);
+        opacity: 1;  // ensure full opacity when hovering the button directly
     }
 
     &.is-success {
@@ -214,6 +223,14 @@ html[data-content-width] #write {
         border-color: #c14a4a;
         opacity: 1;
     }
+}
+
+// JS-managed hover: code-enhance.js toggles .claude-pre-active on the outer
+// pre via mouseenter/mouseleave. More reliable than CSS :hover when Typora's
+// CodeMirror sub-elements interfere with hover propagation.
+.claude-pre-active > .claude-code-copy-btn,
+.claude-code-copy-btn:focus-visible {
+    opacity: 1;
 }
 
 // JS-rendered gutter on the left.
@@ -466,6 +483,15 @@ html[data-theme="grey"] .claude-footnote-popover {
 
         .claude-toc__header,
         .claude-toc__list { display: none; }
+
+        // When the panel is a 28px strip, the toggle's `right: 8px` puts its
+        // left edge at -4px (28 - 8 - 24). Re-center the toggle horizontally
+        // inside the strip instead.
+        .claude-toc__toggle {
+            right: auto;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     }
 }
 
