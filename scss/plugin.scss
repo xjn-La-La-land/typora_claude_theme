@@ -377,7 +377,10 @@ html[data-theme="grey"] .claude-footnote-popover {
 // ============================================================
 .claude-toc {
     position: fixed;
-    top: 60px;
+    // Symmetric vertical insets — there's nothing on the left edge above the
+    // TOC (theme-switcher / width-control are right-side), so the previous
+    // top: 60px left an obviously empty gap above the panel.
+    top: 16px;
     left: 16px;
     bottom: 16px;
     // Width comes from the --claude-toc-width custom property, set by the
@@ -438,6 +441,29 @@ html[data-theme="grey"] .claude-footnote-popover {
         color: var(--control-text-color);
         font-size: 18px;
         line-height: 1;
+    }
+
+    // Pin button: left of the toggle in manual mode; in auto mode the toggle
+    // is hidden and the pin slides to the toggle's slot — see [data-mode]
+    // rules at the bottom of this section.
+    &__pin {
+        position: absolute;
+        top: 8px;
+        right: 36px; // 8 (toggle right) + 24 (toggle width) + 4 (gap)
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        color: var(--accent-color);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.18s ease, transform 0.25s ease, right 0.18s ease;
+
+        svg { display: block; }
+        &:hover { color: var(--accent-color-hover); }
     }
 
     &__header {
@@ -513,6 +539,12 @@ html[data-theme="grey"] .claude-footnote-popover {
         .claude-toc__header,
         .claude-toc__list { display: none; }
 
+        // Pin sits in the header area, which is hidden when collapsed.
+        // Hide it explicitly so it doesn't peek out at right: 36px (-8px
+        // past the 28px strip's right edge, clipped by overflow but still
+        // tab-focusable).
+        .claude-toc__pin { display: none; }
+
         // When the panel is a 28px strip, the toggle's `right: 8px` puts its
         // left edge at -4px (28 - 8 - 24). Re-center the toggle horizontally
         // inside the strip instead.
@@ -522,6 +554,22 @@ html[data-theme="grey"] .claude-footnote-popover {
             transform: translateX(-50%);
         }
     }
+}
+
+// ---- TOC modes ----
+// Manual (default, no data-mode attribute or data-mode="manual"): pin sits
+// left of ≡, both visible. Auto: ≡ disappears, pin slides to right:8px and
+// rotates 35° + dims to indicate "unpinned"; the collapsed strip gets a
+// pointer cursor so the hover affordance is obvious.
+.claude-toc[data-mode="auto"] {
+    .claude-toc__toggle { display: none; }
+    .claude-toc__pin {
+        right: 8px;
+        transform: rotate(35deg);
+        color: var(--control-text-color);
+        &:hover { color: var(--heading-color); }
+    }
+    &.is-collapsed { cursor: pointer; }
 }
 
 html[data-theme="dark"] .claude-toc,

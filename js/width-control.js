@@ -14,7 +14,7 @@
 
 const STORAGE_KEY = 'claude-content-width';
 const WIDTH_MIN = 560;
-const WIDTH_MAX = 1440;
+const WIDTH_MAX = 1800;
 const WIDTH_STEP = 10;
 const WIDTH_DEFAULT = 980; // slider start position when no preference is stored
 

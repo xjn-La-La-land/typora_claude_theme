@@ -15,10 +15,14 @@ const COLLAPSE_LEVEL = 3; // items at this level and deeper start collapsed
 const TOC_WIDTH_STORAGE_KEY = 'claude-toc-width';
 const TOC_WIDTH_MIN = 160;
 const TOC_WIDTH_MAX = 480;
+const TOC_MODE_STORAGE_KEY = 'claude-toc-mode';
+const TOC_HOVER_DELAY_MS = 150; // small wait before auto-expand so a quick cursor cross doesn't open the panel
 
-// 8x8 chevron used as the per-branch expand/collapse toggle.
-// Points right when collapsed; CSS rotates it 90° when the branch is expanded.
-const ICON_CHEVRON = '<svg viewBox="0 0 10 10" width="8" height="8" fill="currentColor" aria-hidden="true"><path d="M3.5 2.5L7 5L3.5 7.5z"/></svg>';
+// Per-branch expand/collapse chevron. Points right when collapsed; CSS
+// rotates it 90° when the branch is expanded.
+const ICON_CHEVRON = '<svg viewBox="0 0 10 10" width="11" height="11" fill="currentColor" aria-hidden="true"><path d="M3.5 2.5L7 5L3.5 7.5z"/></svg>';
+// Pushpin: round head + stem. CSS rotates it 35° in auto mode to suggest "unpinned".
+const ICON_PIN = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="5" r="3" fill="currentColor"/><line x1="8" y1="8" x2="8" y2="14"/></svg>';
 
 function slugify(text) {
   // \p{L}/\p{N} cover letters and digits in every script, so this works for
@@ -143,12 +147,68 @@ function buildToggle(panel) {
   return btn;
 }
 
+function buildPin(panel) {
+  // Pinned (manual) ↔ unpinned (auto) toggle. Manual = current behavior:
+  // panel stays where the user put it. Auto = panel hides as a strip and
+  // slides in on hover. See plugin.scss for the visual state difference.
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'claude-toc__pin';
+  btn.title = '钉住目录 / 鼠标 hover 自动显示';
+  btn.setAttribute('aria-label', '切换目录自动隐藏');
+  btn.innerHTML = ICON_PIN;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const next = panel.dataset.mode === 'auto' ? 'manual' : 'auto';
+    applyMode(panel, next);
+    setStoredMode(next);
+  });
+  return btn;
+}
+
+function getStoredMode() {
+  try {
+    return localStorage.getItem(TOC_MODE_STORAGE_KEY) === 'auto' ? 'auto' : 'manual';
+  } catch {
+    return 'manual';
+  }
+}
+
+function setStoredMode(mode) {
+  try { localStorage.setItem(TOC_MODE_STORAGE_KEY, mode); } catch {}
+}
+
+function applyMode(panel, mode) {
+  panel.dataset.mode = mode;
+  // Switching to auto immediately collapses to the hover-strip — this both
+  // demonstrates the new behavior to the user and matches the design
+  // (auto-mode is "TOC hides until you hover"). Switching back to manual
+  // leaves the current is-collapsed state alone; the user takes over.
+  if (mode === 'auto') panel.classList.add('is-collapsed');
+}
+
+function attachAutoHover(panel) {
+  let openTimer = null;
+  panel.addEventListener('mouseenter', () => {
+    if (panel.dataset.mode !== 'auto') return;
+    clearTimeout(openTimer);
+    openTimer = setTimeout(() => panel.classList.remove('is-collapsed'), TOC_HOVER_DELAY_MS);
+  });
+  panel.addEventListener('mouseleave', () => {
+    // Always clear pending open so a quick mode switch mid-delay doesn't leak.
+    clearTimeout(openTimer);
+    if (panel.dataset.mode !== 'auto') return;
+    panel.classList.add('is-collapsed');
+  });
+}
+
 function buildPanel(items) {
   const aside = document.createElement('aside');
   aside.className = 'claude-toc';
   // Default-collapsed on narrow viewports.
   if (window.matchMedia('(max-width: 1100px)').matches) aside.classList.add('is-collapsed');
   aside.appendChild(buildToggle(aside));
+  aside.appendChild(buildPin(aside));
   const header = document.createElement('div');
   header.className = 'claude-toc__header';
   header.textContent = '目录';
@@ -224,8 +284,12 @@ export default {
     }
     const panel = buildPanel(items);
     restoreWidth(panel);
+    // Apply persisted mode before mounting so the user doesn't see a flicker
+    // (e.g. auto mode expanding momentarily then collapsing).
+    applyMode(panel, getStoredMode());
     document.body.appendChild(panel);
     attachResize(panel);
+    attachAutoHover(panel);
 
     // Smooth-scroll behavior on TOC links (let location.hash update naturally).
     panel.addEventListener('click', (e) => {
