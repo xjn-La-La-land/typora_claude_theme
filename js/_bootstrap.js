@@ -10,6 +10,8 @@
 import themeSwitcher from './theme-switcher.js';
 import widthControl from './width-control.js';
 import codeEnhance from './code-enhance.js';
+import mathCopy from './math-copy.js';
+import tableCopy from './table-copy.js';
 import imageLightbox from './image-lightbox.js';
 import footnote from './footnote.js';
 import toc from './toc.js';
@@ -18,6 +20,8 @@ const modules = [
   themeSwitcher,
   widthControl,
   codeEnhance,
+  mathCopy,
+  tableCopy,
   imageLightbox,
   footnote,
   toc,

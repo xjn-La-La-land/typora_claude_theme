@@ -178,13 +178,18 @@ html[data-content-width] #write {
 
 
 // ============================================================
-// Code block enhancement: copy button + line numbers
+// Copy buttons — shared by code-enhance, math-copy, table-copy
 // ============================================================
-#write pre {
-    position: relative; // anchor for absolute-positioned copy button
+// Anchor for the absolute-positioned button. Each module also sets
+// `position: relative` defensively, but anchoring here keeps the SCSS in
+// one place and makes the relationship visible.
+#write pre,
+.claude-math-block,
+.claude-table-host {
+    position: relative;
 }
 
-.claude-code-copy-btn {
+.claude-copy-btn {
     position: absolute;
     top: 8px;
     right: 8px;
@@ -225,11 +230,11 @@ html[data-content-width] #write {
     }
 }
 
-// JS-managed hover: code-enhance.js toggles .claude-pre-active on the outer
-// pre via mouseenter/mouseleave. More reliable than CSS :hover when Typora's
-// CodeMirror sub-elements interfere with hover propagation.
-.claude-pre-active > .claude-code-copy-btn,
-.claude-code-copy-btn:focus-visible {
+// JS-managed hover: copy-utils toggles .claude-copy-hover on the host via
+// mouseenter/mouseleave. More reliable than CSS :hover when child elements
+// (CodeMirror, MathJax SVG) capture pointer events.
+.claude-copy-hover > .claude-copy-btn,
+.claude-copy-btn:focus-visible {
     opacity: 1;
 }
 
@@ -252,6 +257,27 @@ html[data-content-width] #write {
         white-space: pre;
         user-select: none;
         pointer-events: none;
+    }
+}
+
+
+// ============================================================
+// Inline math affordance — click to copy LaTeX (silent on success)
+// ============================================================
+// hover: subtle bg darken so the user knows it's clickable; cursor:copy is
+// the primary affordance. No success feedback by design — failure flashes
+// a red outline so the user notices an empty paste.
+.claude-math-inline {
+    cursor: copy;
+    border-radius: 4px;
+    transition: background-color 0.18s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        background-color: var(--item-hover-bg-color);
+    }
+
+    &.claude-copy-failed {
+        box-shadow: 0 0 0 2px #c14a4a;
     }
 }
 

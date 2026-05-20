@@ -42,6 +42,16 @@ title: Claude-Like Theme — Sample Document
 | 单元 1 | 单元 2 | 单元 3 |
 | 长一些的内容,看 padding 是否撑开 | 中等 | 短 |
 
+下面这张是 **table-copy** 模块的转换测试用，把它复制后粘出来检查 markdown 源是否正确：
+
+| 格式 | 示例 | 期望粘贴结果 |
+| ---- | ---- | ---- |
+| 加粗 | **bold** | `**bold**` |
+| 斜体 | *italic* | `*italic*` |
+| 行内代码 | `code` | `` `code` `` |
+| 链接 | [Anthropic](https://anthropic.com) | `[Anthropic](https://anthropic.com)` |
+| 含管道 | 含 \| 字符 | `含 \| 字符` |
+
 ## 二级标题：代码块
 
 Python：

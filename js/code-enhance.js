@@ -8,10 +8,7 @@
  * (skip CodeMirror line pres and any nested-in-pre pre).
  */
 
-// 14x14 SVG icons rendered with stroke=currentColor so they inherit the button color.
-const ICON_COPY = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8.5" rx="1.5"/><path d="M3 11V4a1.5 1.5 0 0 1 1.5-1.5H10"/></svg>';
-const ICON_CHECK = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.5 3.5L13 4.5"/></svg>';
-const ICON_FAIL = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>';
+import { attachHoverCopyButton } from './copy-utils.js';
 
 function isOuterCodeBlock(pre) {
   // Skip CodeMirror line elements (inner per-line pres from Typora's "with styles" export).
@@ -40,60 +37,6 @@ function extractCode(pre) {
   }
   // Last resort.
   return pre.innerText;
-}
-
-function copyText(text) {
-  if (navigator.clipboard?.writeText) {
-    return navigator.clipboard.writeText(text);
-  }
-  // Fallback: textarea + execCommand
-  return new Promise((resolve, reject) => {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy') ? resolve() : reject(new Error('execCommand failed'));
-    } finally {
-      document.body.removeChild(ta);
-    }
-  });
-}
-
-function attachCopyButton(pre) {
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'claude-code-copy-btn';
-  btn.title = '复制代码';
-  btn.setAttribute('aria-label', '复制代码');
-  btn.innerHTML = ICON_COPY;
-  btn.addEventListener('click', async (e) => {
-    e.stopPropagation();
-    try {
-      await copyText(extractCode(pre));
-      btn.innerHTML = ICON_CHECK;
-      btn.classList.add('is-success');
-      setTimeout(() => {
-        btn.innerHTML = ICON_COPY;
-        btn.classList.remove('is-success');
-      }, 2000);
-    } catch (err) {
-      btn.innerHTML = ICON_FAIL;
-      btn.classList.add('is-error');
-      setTimeout(() => {
-        btn.innerHTML = ICON_COPY;
-        btn.classList.remove('is-error');
-      }, 2000);
-    }
-  });
-  // JS-managed hover toggle: CSS :hover on pre.md-fences can be flaky when
-  // CodeMirror sub-elements have their own pointer-event handling. Explicit
-  // mouseenter/mouseleave on the outer pre is more reliable.
-  pre.addEventListener('mouseenter', () => pre.classList.add('claude-pre-active'));
-  pre.addEventListener('mouseleave', () => pre.classList.remove('claude-pre-active'));
-  pre.appendChild(btn);
 }
 
 function applyLineNumbers(pre) {
@@ -126,7 +69,7 @@ export default {
     pres.forEach((pre) => {
       if (!isOuterCodeBlock(pre)) return;
       if (!isCodeBlock(pre)) return;
-      attachCopyButton(pre);
+      attachHoverCopyButton(pre, () => extractCode(pre), { title: '复制代码', label: '复制代码' });
       applyLineNumbers(pre);
       count++;
     });
