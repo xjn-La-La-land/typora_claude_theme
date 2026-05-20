@@ -1,6 +1,6 @@
 {
   "name": "claude-like-typora-theme",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A Claude-inspired Typora theme with light, grey, and dark variants.",
   "private": true,
   "scripts": {
