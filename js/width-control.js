@@ -31,9 +31,14 @@ function getStoredWidth() {
   }
 }
 
-function applyWidth(width) {
+function setWidth(width) {
   document.documentElement.style.setProperty('--claude-content-max', `${width}px`);
   document.documentElement.setAttribute('data-content-width', 'custom');
+}
+
+// Persist separately from the visual apply. Dragging the slider fires `input`
+// for every step; we don't want to hit localStorage hundreds of times per drag.
+function persistWidth(width) {
   try { localStorage.setItem(STORAGE_KEY, String(width)); } catch {}
 }
 
@@ -64,9 +69,13 @@ function buildControl(initialWidth) {
   updateFill();
 
   slider.addEventListener('input', () => {
-    const v = parseInt(slider.value, 10);
-    applyWidth(v);
+    setWidth(parseInt(slider.value, 10));
     updateFill();
+  });
+  // `change` fires on release (mouseup / keyboard commit), so persistence
+  // happens once per gesture instead of once per pixel.
+  slider.addEventListener('change', () => {
+    persistWidth(parseInt(slider.value, 10));
   });
 
   root.appendChild(slider);
@@ -77,7 +86,7 @@ export default {
   name: 'width-control',
   init(ctx) {
     const stored = getStoredWidth();
-    if (stored !== null) applyWidth(stored);
+    if (stored !== null) setWidth(stored); // already in storage; no need to re-persist
     const control = buildControl(stored);
     document.body.appendChild(control);
     ctx.log('width-control mounted');

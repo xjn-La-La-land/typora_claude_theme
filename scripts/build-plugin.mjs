@@ -48,10 +48,14 @@ async function readVersion() {
 async function main() {
   const [css, js, version] = await Promise.all([buildCSS(), buildJS(), readVersion()]);
   const tpl = await readFile(resolve(root, 'plugin/template.html'), 'utf8');
+  // Use the function-replacement form: a string replacement would interpret
+  // $&, $1..$n, $` and $' as backref patterns. Minified JS can legitimately
+  // contain those sequences (e.g. inside a string literal or RegExp source),
+  // which would silently corrupt the bundle.
   const out = tpl
-    .replaceAll('{{PLUGIN_CSS}}', css)
-    .replaceAll('{{PLUGIN_JS}}', js)
-    .replaceAll('{{VERSION}}', version);
+    .replaceAll('{{PLUGIN_CSS}}', () => css)
+    .replaceAll('{{PLUGIN_JS}}', () => js)
+    .replaceAll('{{VERSION}}', () => version);
 
   const distDir = resolve(root, 'dist');
   await mkdir(distDir, { recursive: true });

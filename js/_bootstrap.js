@@ -25,7 +25,6 @@ const modules = [
 
 function buildContext() {
   return {
-    version: '__INJECTED_AT_BUILD__', // build:plugin will not replace this; informational only
     log: (...args) => console.info('[claude-plugin]', ...args),
     warn: (...args) => console.warn('[claude-plugin]', ...args),
   };

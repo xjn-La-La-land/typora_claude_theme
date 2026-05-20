@@ -126,7 +126,6 @@ export default {
     pres.forEach((pre) => {
       if (!isOuterCodeBlock(pre)) return;
       if (!isCodeBlock(pre)) return;
-      pre.style.position = pre.style.position || 'relative';
       attachCopyButton(pre);
       applyLineNumbers(pre);
       count++;

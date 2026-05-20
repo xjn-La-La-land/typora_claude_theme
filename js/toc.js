@@ -21,10 +21,14 @@ const TOC_WIDTH_MAX = 480;
 const ICON_CHEVRON = '<svg viewBox="0 0 10 10" width="8" height="8" fill="currentColor" aria-hidden="true"><path d="M3.5 2.5L7 5L3.5 7.5z"/></svg>';
 
 function slugify(text) {
+  // \p{L}/\p{N} cover letters and digits in every script, so this works for
+  // Japanese (hiragana, katakana), Hangul, CJK extensions, etc. The previous
+  // [一-龥] character class only matched the CJK Unified Ideographs basic
+  // block and silently stripped everything else.
   return (text || '')
     .trim()
     .toLowerCase()
-    .replace(/[^\w一-龥 -]/g, '')
+    .replace(/[^\p{L}\p{N} -]/gu, '')
     .replace(/\s+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
@@ -36,8 +40,10 @@ function collectHeadings(root) {
   for (const h of all) {
     const level = Number(h.tagName.slice(1));
     if (level > MAX_LEVEL) continue;
-    let id = h.id || slugify(h.textContent);
-    if (!id) continue;
+    // Fall back to a position-based id when slugify yields nothing (e.g. a
+    // heading composed entirely of emoji or punctuation). Without this the
+    // heading would be silently dropped from the TOC.
+    const id = h.id || slugify(h.textContent) || `heading-${items.length + 1}`;
     let unique = id;
     let n = 1;
     while (used.has(unique)) unique = `${id}-${++n}`;
@@ -106,6 +112,7 @@ function attachScrollSpy(items) {
   });
 
   const visible = new Set();
+  let lastActiveId = null;
   const obs = new IntersectionObserver((entries) => {
     for (const e of entries) {
       if (e.isIntersecting) visible.add(e.target.id);
@@ -116,7 +123,12 @@ function attachScrollSpy(items) {
     for (const it of items) {
       if (visible.has(it.id)) { activeId = it.id; break; }
     }
-    tocItems.forEach((li, id) => li.classList.toggle('is-active', id === activeId));
+    if (activeId === lastActiveId) return;
+    // Toggle only the two affected items — full forEach would be O(headings)
+    // per scroll tick, which is noticeable on long documents.
+    if (lastActiveId) tocItems.get(lastActiveId)?.classList.remove('is-active');
+    if (activeId) tocItems.get(activeId)?.classList.add('is-active');
+    lastActiveId = activeId;
   }, { rootMargin: '0px 0px -65% 0px', threshold: 0 });
   items.forEach((it) => obs.observe(it.el));
 }

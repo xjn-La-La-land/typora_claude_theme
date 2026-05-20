@@ -27,13 +27,13 @@ title: Claude-Like Theme — Sample Document
 2. 有序项二
 3. 有序项三
 
-#### 四级标题不应该出现在 TOC
+#### 四级标题(默认折叠在三级标题下,点 chevron 展开后可见)
 
 正文……
 
-##### 五级标题不应出现在 TOC
+##### 五级标题
 
-###### 六级标题不应出现在 TOC
+###### 六级标题
 
 ## 二级标题：表格
 
@@ -73,7 +73,7 @@ ls -la
 
 ## 二级标题：图片
 
-![一张测试图，alt 文本会作为 caption](image/2026-03-11-claude-like-theme/light.png)
+![一张测试图，alt 文本会作为 caption](../image/2026-03-11-claude-like-theme/light.png)
 
 ## 二级标题：脚注
 
